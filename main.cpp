@@ -9,6 +9,7 @@ const int MAXSIZE = 100;
 int maze[MAXSIZE][MAXSIZE];
 
 vector < pair<int, int> >  path;//The dynamic array path is used to store the path
+vector < pair<int, int> >  stackk;//The dynamic array path is used to store the path
 
 bool flag = true;//Used for recursive end return
 int dir[4][2] = {//Direction array
@@ -74,48 +75,40 @@ int main(int argc, char const *argv[])
         //Add the number to the end of the array
         count++;
     }
-    cout<<count<<endl;
 
-    for(int i =0; i<count; i++){
-        cout<<array[i]<<" ";
-    }
     int arr_size = sqrt(count);
-
     count = 0;
     for (int i = 0; i < arr_size; i++) {
         for (int j = 0; j < arr_size; j++) {
             maze[i][j] = array[count];
+            //cout<<i<<" "<<j<<"This is i j : "<<array[count]<<endl;
+            if(array[count]==2){ //Set intial position
+                cout<<endl<<i<<" "<<j<<"This is i j"<<endl;
+                x = i;
+                y= j;
+            }
             count++;
         }
     }
 
-    print_maze(arr_size);
+    //Send intial position to stack
+    //stackk.push_back(make_pair(x,y));
+    //path.push_back(make_pair(x,y)); //mark as visited
 
-    if(argc == 1)
-    {
-        argv[1] = "C:\\Users\\timni\\CLionProjects\\untitled3\\Generated.txt";
-    }
-    freopen(argv[1],"r", stdin);
-    while(scanf("%d%d", &n, &m) != EOF){
-        for(int i = 0; i <= n + 1; i++)
-            maze[0][i] = maze[m + 1][i] = 1;
-        for(int i = 0; i <= m + 1; i++)
-            maze[i][0] = maze[i][n + 1] = 1;
+    //DF_S{
 
-        // print_maze();
+    path.push_back( make_pair(x,y) );
+    path.push_back( make_pair(2,2) );
 
-        for(int i = 1; i <= m; i++)
-            for(int j = 1; j <= n; j++){
-                scanf("%d", &maze[i][j]);   //Get data
-                if(maze[i][j] == 2){    //Set end point
-                    x = j;
-                    y = i;
-                }
-            }//Enter data and set the end point
-        //print_maze();
-        path.push_back(make_pair(y,x));
+    cout << path[0].first << " "
+         << path[0].second << endl;
+
+    cout<<endl<<path.back().first<<" "<<path.back().second;
+
+    // }
+
         for(int i = 0; i < 4; i++){
-            DFS(y + dir[i][0], x + dir[i][1]);//Search in four directions recursively
+            DFS(x + dir[i][0], y + dir[i][1]);//Search in four directions recursively
         }
 
 
@@ -124,6 +117,10 @@ int main(int argc, char const *argv[])
         printf("Path:\n");
         for(int i = 0; i < path.size(); i++)
             printf("%d %d\n", path[i].first, path[i].second);
-    }
+
     return 0;
 }
+
+//Use 2 2
+//Take 4 directions select one & take others to array
+//right cell dekak issarhin nathi cell ekak thynid balala
