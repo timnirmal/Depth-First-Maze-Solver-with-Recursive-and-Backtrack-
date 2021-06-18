@@ -179,7 +179,7 @@ int main(int argc, char const *argv[])
             //cout<<"\nSending "<<x<<" in direction "<<dir[d][0]<<" and "<<y<<" in direction "<<dir[d][1];
             cout<<"Number from main : ";
             cout<<" (x,y) "<<x+dir[d][0]<<" "<<y+dir[d][1]<<endl;
-            D_F_S(x + dir[d][0], y + dir[d][1]); //Send each value to Depth first search with direction
+            D_F_S(y + dir[d][0], x + dir[d][1]); //Send each value to Depth first search with direction
             //cout<<" (x,y) "<<x+dir[d][0]<<" "<<y+dir[d][1];
             //cout << "\nSend retunred";
             //}
