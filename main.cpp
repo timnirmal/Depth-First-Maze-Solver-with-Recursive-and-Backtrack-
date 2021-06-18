@@ -223,6 +223,22 @@ int main(int argc, char const *argv[])
         }
         cout<<endl;
     }
+    cout<<endl<<endl;
+    for(int i =0; i<arr_size;i++){
+        for(int j =0; j<arr_size;j++){
+            //cout<<path[i].first<<" "<<path[i].second<< " in "<<i<<" "<<j<<endl;
+            if(maze[i][j]==0){
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
+                cout<<0<<" ";
+            }
+            else{
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
+                cout<< maze[i][j]<<" ";
+            }
+            cp++;
+        }
+        cout<<endl;
+    }
     return 0;
 }
 
