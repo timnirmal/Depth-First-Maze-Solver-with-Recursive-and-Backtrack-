@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include "windows.h"
+#include "Stack.h"
 
 using namespace std;
 const int MAXSIZE = 100;
@@ -14,11 +15,17 @@ vector < pair<int, int> >  stackk;//The dynamic array path is used to store the 
 
 bool flag = true;//Used for recursive end return
 int dir[4][2] = {//Direction array
-        {- 1, 0},   //Up
-        {1, 0},     //Down
-        {0, - 1},   //Left
-        {0, 1}      //Right
+        {- 1, 0},   //Left
+        {1, 0},     //Right
+        {0, - 1},   //Up
+        {0, 1}      //Down
 };
+
+Stack s;
+Stack visited;
+vector <pair<int,int>> adj;
+
+pair<int, int> initial_position;
 
 void print_maze(){
     cout<<endl<<endl;
@@ -105,8 +112,267 @@ void D_F_S(int x,int y){
     if(flag) path.pop_back();//Exit the path if this vertex is not found
 }
 
+void Depth_first_search(int v,int u){
+    bool flag =true;
+    while (true) {
+        if (s.isEmpty() == true) return;
+
+        if(flag=false) return;
+
+        pair<int, int> current_position;
+        current_position = s.pop(); //getting new value from stack
+
+        //if s.pop() exists in
+        //adj.pop();
+
+
+
+
+        //Mark new position as visited
+        maze[current_position.first][current_position.second] = 1;
+        visited.push(current_position);
+
+
+        int count_dir=0;
+        for (auto &direction:dir) {
+            cout << "Current position " << current_position.first + direction[0] << " "
+                 << current_position.second + direction[1];
+            cout << " Value " << maze[current_position.first + direction[0]][current_position.second + direction[1]]
+                 << endl;
+            if (0 <= current_position.first + direction[0] && current_position.first + direction[0] < 21 &&
+                0 <= current_position.second + direction[1] && current_position.second + direction[1] < 21) {
+
+                if (maze[current_position.first+ direction[0]][current_position.second+ direction[1]] == 3) {
+                    cout<<"3 detected\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                    cout<<"3 detected\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                    cout<<"3 detected\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                    cout<<"3 detected\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                    flag= false;
+                    return;
+                }
+                if (maze[current_position.first + direction[0]][current_position.second + direction[1]] == 0) {
+                    //adjecent
+                    pair<int, int> temp_pair = make_pair(current_position.first + direction[0],
+                                                         current_position.second + direction[1]);
+                    adj.push_back(temp_pair);
+                    s.push(temp_pair);      //Adjecent value to stack
+
+                    //print that value
+                    pair<int, int> ne_print;
+                    ne_print = s.peek();
+                    cout << ne_print.first << " " << ne_print.second << endl;
+                }
+                else{
+                    cout<<"Visited one\n";
+                    count_dir++;
+                }
+            }
+            else{
+                cout<<"Trying to go out\n";
+            }
+        }
+
+        cout<<"Count"<<count_dir<<endl;
+        cout<<"Before deleting in adj "<<s.peek().first<<" "<<s.peek().second<<endl;
+        if (count_dir == 4) {
+            cout<<"In the counter"<<endl;
+            for (int i = 0; i < adj.size(); i++) {
+                //for(auto &adj_1:adj){
+                //if(adj_1.first==current_position.first && adj_1.second==current_position.second){
+                cout<<endl<<"Before conditino check\n";
+                cout<<"adj "<<adj[i].first<<" "<<adj[i].second<<endl;
+                cout<<"s "<<s.peek().first<<" "<<s.peek().second<<endl;
+                if (adj[i].first == s.peek().second && adj[i].second == s.peek().first) {
+                    //adj.erase(adj.begin()+i+1);
+                    cout<<"hmm this delete then "<<adj[i].first<<" "<<adj[i].second<<endl;
+                    adj.resize(i-1);
+                }
+                //}
+            }
+        }
+
+        cout << "\nStack " << s.size() << " \tvisited " << visited.size() << endl;
+
+
+        for (auto &i : adj){
+            maze[i.first][i.second]=7;
+        }
+
+        for(int i =0; i<21;i++){
+            for(int j =0; j<21;j++){
+                //cout<<path[i].first<<" "<<path[i].second<< " in "<<i<<" "<<j<<endl;
+                if(maze[i][j]==7){
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
+                    cout<<0<<" ";
+                }
+                else{
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
+                    cout<< maze[i][j]<<" ";
+                }
+
+            }
+            cout<<endl;
+        }
+    }
+}
+
 int main(int argc, char const *argv[])
 {
+    int n, m;
+    int x, y;
+
+    int array[1000];
+    int count = 0;
+
+    ifstream file("C:\\Users\\timni\\CLionProjects\\untitled3\\Generated.txt");
+
+    if(!file )
+        cout<<"File not Found";
+    while (!file.eof()) {
+        file >> array[count];
+        //Add the number to the end of the array
+        count++;
+    }
+
+
+
+
+
+    int arr_size = sqrt(count);
+    count = 0;
+    for (int i = 0; i < arr_size; i++) {
+        for (int j = 0; j < arr_size; j++) {
+            maze[i][j] = array[count];
+            if(array[count]==2){ //Set intial position
+                cout<<endl<<i<<" "<<j<<" This is i j"<<endl;
+                x = i;
+                y= j;
+                initial_position = make_pair(i, j);
+            }
+            count++;
+        }
+    }
+
+    //cout<<current_position.first<<" "<<current_position.second<<endl;
+    //cout<<maze[current_position.first][current_position.second];
+
+    //Create copy of array
+    int maze_copy[arr_size][arr_size];
+    for (int i = 0; i < arr_size; i++) {
+        for (int j = 0; j < arr_size; j++) {
+            maze_copy[i][j] = maze[i][j];
+        }
+    }
+
+    //Intialize empty stack of size 1000
+    //all 0
+    //push first node
+    //visit vertex s
+    //mark s as visited
+    //visit to next unvisited s
+
+    //We have maze now
+    //Copy of maze for print
+
+    for (int i = 0; i < arr_size; i++) {
+        for (int j = 0; j < arr_size; j++) {
+            cout<<maze[i][j]<<" ";
+        }cout<<endl;
+    }
+    cout<<endl;
+
+
+
+
+
+
+    //Inside function
+    //First value
+    s.push(initial_position);
+    adj.push_back(initial_position);
+    visited.push(initial_position);
+
+    //Mark as visited
+    maze[initial_position.first][initial_position.second]=1;
+
+    cout << "Is empty" << s.size() << endl;
+    cout << endl << "Hi" << endl;
+
+    cout<<"Initial Position "<<initial_position.first<<" "<<initial_position.second<<endl<<endl;
+
+
+    Depth_first_search(initial_position.first,initial_position.second);
+
+
+    cout<<endl<<"Hi"<<endl;
+
+    pair<int, int> new_position;
+    new_position=s.pop();
+    cout<<new_position.first<<"  "<<new_position.second;
+
+    cout<<endl;
+    pair<int, int> ne_position;
+    ne_position=visited.pop();
+    ne_position=visited.pop();
+    cout<<ne_position.first<<"  "<<ne_position.second;
+
+    //Print the result
+    //printf("Steps: %d\n", visited.size());
+    //printf("Path:\n");
+    //for (int i = 0; i < path.size(); i++) {
+      //  printf("%d %d\n", path[i].first, path[i].second);
+    //}
+
+    cout<<endl<<"Lets print the maze"<<endl;
+
+    int cp=0;
+
+    while (visited.isEmpty()){
+        pair<int, int> position;
+        position=visited.pop();
+        cout<<position.first<<" "<<position.second<<endl;
+        maze[position.first][position.second]=7;
+    }
+
+    cout<<endl<<endl;
+
+    for (auto &i : adj){
+        maze_copy[i.first][i.second]=7;
+    }
+
+    for(int i =0; i<arr_size;i++){
+        for(int j =0; j<arr_size;j++){
+            //cout<<path[i].first<<" "<<path[i].second<< " in "<<i<<" "<<j<<endl;
+            if(maze_copy[i][j]==7){
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
+                cout<<"# ";
+            }
+            else{
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
+                cout<< maze_copy[i][j]<<" ";
+            }
+            cp++;
+        }
+        cout<<endl;
+    }
+    cout<<endl<<endl;
+    for(int i =0; i<arr_size;i++){
+        for(int j =0; j<arr_size;j++){
+            //cout<<path[i].first<<" "<<path[i].second<< " in "<<i<<" "<<j<<endl;
+            if(maze[i][j]==0){
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
+                cout<<0<<" ";
+            }
+            else{
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
+                cout<< maze[i][j]<<" ";
+            }
+            cp++;
+        }
+        cout<<endl;
+    }
+
+    /*
     int n, m;
     int x, y;
 
@@ -238,6 +504,22 @@ int main(int argc, char const *argv[])
             cp++;
         }
         cout<<endl;
+    }
+
+    Stack d1;
+    d1.push(1);
+    d1.push(2);
+
+    cout<<d1.pop()<<endl;
+    cout<<d1.peek();
+     */
+
+    cout<<"\n\n\n"<<adj.size();
+
+    cout<<endl;
+
+    for(auto &fg:adj){
+        cout<<fg.first<<" "<<fg.second<<endl;
     }
     return 0;
 }
