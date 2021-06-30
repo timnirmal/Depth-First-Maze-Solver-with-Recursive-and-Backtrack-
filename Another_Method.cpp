@@ -47,7 +47,7 @@ Another_Method::Another_Method()
     string array[5000];
     int count = 0;
 
-    ifstream file("C:\\Users\\timni\\CLionProjects\\untitled7\\cmake-build-debug\\Generate.txt");
+    ifstream file("C:\\Users\\timni\\CLionProjects\\untitled3\\Generated.txt");
 
     if(!file )
         cout<<"File not Found";

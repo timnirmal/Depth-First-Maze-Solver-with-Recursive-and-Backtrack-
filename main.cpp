@@ -86,14 +86,12 @@ void DFS(pair<int, int> position) {
 }
 
 int main() {
-    Generator obj_gen;
 
-    cout<<endl;
 
     string array[5000];
     int count = 0;
 
-    ifstream file("C:\\Users\\timni\\CLionProjects\\untitled7\\cmake-build-debug\\Generate.txt");
+    ifstream file("C:\\Users\\timni\\CLionProjects\\untitled3\\Generated.txt");
 
     if (!file)
         cout << "File not Found";
@@ -167,5 +165,8 @@ int main() {
 
     Another_Method obj;
 
+    cout<<"\n\nSolver\n\n";
+    Generator obj_gen;
+    cout<<endl;
     return 0;
 }
