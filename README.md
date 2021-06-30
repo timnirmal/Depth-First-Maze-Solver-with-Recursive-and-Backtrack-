@@ -1,4 +1,4 @@
-# Depth First Maze Solver (with Recursive and Backtrack)
+# Depth First Search Maze Solver (with Recursive and Backtrack)
 
 In here main goal is to make a *Maze Solver* with Depth first search.
 
