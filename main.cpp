@@ -14,6 +14,7 @@
 #include "Stack.h"
 
 #include "Another_Method.h"
+#include "Generator.h"
 
 using namespace std;
 const int MAXSIZE = 100;
@@ -85,6 +86,9 @@ void DFS(pair<int, int> position) {
 }
 
 int main() {
+    Generator obj_gen;
+
+    cout<<endl;
 
     string array[5000];
     int count = 0;

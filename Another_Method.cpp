@@ -2,7 +2,6 @@
 #include<bits/stdc++.h>
 #include <cstdio>
 #include <string>
-#include <fstream>
 #include "windows.h"
 #include "Another_Method.h"
 
@@ -21,73 +20,6 @@ int dir_another[4][2] = {//Direction array
         {0, - 1},   //Left
         {0, 1}      //Right
 };
-
-void print_maze(){
-    cout<<endl<<endl;
-    for(int i=0; i<21;i++){
-        for(int j =0; j<21;j++){
-            cout<<maze_another[i][j]<<" ";
-        }
-        cout<<endl;
-    }
-    cout<<endl<<endl;
-}
-void print_maze(int n){
-    cout<<endl<<endl;
-    for(int i=0; i<n;i++){
-        for(int j =0; j<n;j++){
-            cout<<maze_another[i][j]<<" ";
-        }
-        cout<<endl;
-    }
-    cout<<endl<<endl;
-}
-
-void DFS(int x, int y){
-    cout<<"Yes";
-    if(!flag) return;   //Function will be terminated if flag false (End found) (Not sure)
-
-    if(maze_another[y][x] == 3){    //Found 3
-        path.push_back(make_pair(y,x));
-        flag = false;
-        return;
-    }
-    if(maze_another[y][x] == 1) return;
-    //The above judgment statement detects whether it reaches the end of the recursion
-
-    maze_another[y][x] = 1;//Mark has been visited
-    path.push_back(make_pair(y,x));//Add this vertex to the path
-    for(int i = 0; i < 4 && flag; i++){//Continue recursive search in four directions
-        DFS(y + dir_another[i][0], x + dir_another[i][1]);
-    }
-    if(flag) path.pop_back();//Exit the path if this vertex is not found
-}
-
-void DF_search(int x, int y){
-    //cout<<"OK 200<<endl";
-    if(!flag) return;
-    if(maze_another[x][y]==3){
-        cout<<"\nFound";
-        cout<<" at "<<x<<" "<<y<<endl<<endl;
-        return;
-    }
-    if(maze_another[y][x] == 1) return; //If visited or wall found
-
-    maze_another[y][x] = 1;//Mark has been visited
-
-    maze_another[y][x] = 1;//Mark has been visited
-
-    //cout<<"hey";
-    path.push_back(make_pair(x,y));//Add this vertex to the path
-    stackk.push_back(make_pair(x,y));
-
-    for(int i = 0; i < 4 && flag; i++){//Continue recursive search in four directions
-        //cout<<"\nSending "<<x<<" in direction "<<dir[i][0]<<" and "<<y<<" in direction "<<dir[i][1];
-        cout<<" (x,y) "<<x+dir_another[i][0]<<" "<<y+dir_another[i][1];
-        DF_search(x + dir_another[i][0], y + dir_another[i][1]);
-    }
-    if(flag) stackk.pop_back();//Exit the path if this vertex is not found
-}
 
 void D_F_S(int x,int y){
     if(!flag) return;
@@ -152,52 +84,28 @@ Another_Method::Another_Method()
         }
     }
 
-    //Send intial position to stack
-    //stackk.push_back(make_pair(x,y));
-    //path.push_back(make_pair(x,y)); //mark as visited
-
-    //DF_S{
 
     path.push_back( make_pair(x,y) );
     stackk.push_back( make_pair(x,y));
-
-    //cout << path[0].first << " " << path[0].second << endl;
-    //cout << path[0].first << " " << path[0].second << endl;
-    //cout<<endl<<path.back().first<<" "<<path.back().second;
 
 //Function
     int nLoopCount=0;
 
     while (true)
     {
-        //if (maze[path.back().first][path.back().second] == 3) {   //termination condition
+        //termination condition
         if(nLoopCount==3){
             cout<<"\nFound";
             cout<<" at "<<x<<" "<<y<<endl<<endl;
             break;
         }
-        //Functions here
-        //Add adjecent items to stack
-        //Need to calculate with directions
-        //In here I assumed that there is wall around maze and enterece is made from there.
-        cout<<"About to enter the directions.\n";
+
         for (int d=0; d<4; d++){
-            //if(x+dir[d][0] == 0) {
-            //cout<<"\nSending "<<x<<" in direction "<<dir[d][0]<<" and "<<y<<" in direction "<<dir[d][1];
-            cout<<"Number from main : ";
-            cout<<" (x,y) "<<x+dir_another[d][0]<<" "<<y+dir_another[d][1]<<endl;
             D_F_S(y + dir_another[d][0], x + dir_another[d][1]); //Send each value to Depth first search with direction
-            //cout<<" (x,y) "<<x+dir[d][0]<<" "<<y+dir[d][1];
-            //cout << "\nSend retunred";
-            //}
         }
-        //cout<<endl<<path.back().first<<" "<<path.back().second;
         nLoopCount++;
 
     }
-
-    //cout<<"Not Found.\n";
-    cout<< "Stoped at "<<x<<" "<<y<<endl<<endl;
 
 
     //Print the result
@@ -237,12 +145,6 @@ Another_Method::Another_Method()
             }
             cp++;
         }
-
         cout<<endl;
     }
 }
-
-//Use 2 2
-//Take 4 directions select one & take others to array
-//right cell dekak issarhin nathi cell ekak thynid balala
-
