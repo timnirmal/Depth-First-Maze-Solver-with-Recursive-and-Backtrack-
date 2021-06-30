@@ -1,6 +1,5 @@
 #include <iostream>
 #include<bits/stdc++.h>
-#include <cstdio>
 #include <string>
 #include <fstream>
 #include "windows.h"
@@ -122,16 +121,9 @@ void Depth_first_search(int v,int u){
         pair<int, int> current_position;
         current_position = s.pop(); //getting new value from stack
 
-        //if s.pop() exists in
-        //adj.pop();
-
-
-
-
         //Mark new position as visited
         maze[current_position.first][current_position.second] = 1;
         visited.push(current_position);
-
 
         int count_dir=0;
         for (auto &direction:dir) {
@@ -148,6 +140,20 @@ void Depth_first_search(int v,int u){
                     cout<<"3 detected\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
                     cout<<"3 detected\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
                     flag= false;
+
+                    for (int i = 0; i < adj.size(); i++) {
+                        //for(auto &adj_1:adj){
+                        //if(adj_1.first==current_position.first && adj_1.second==current_position.second){
+                        cout<<endl<<"Before conditino check\n";
+                        cout<<"adj "<<adj[i].first<<" "<<adj[i].second<<endl;
+                        cout<<"s "<<s.peek().first<<" "<<s.peek().second<<endl;
+                        maze[s.peek().first][s.peek().second]=0;
+                        if (adj[i].first == s.peek().first && adj[i].second == s.peek().second) {
+                            adj.erase(adj.begin()+i);
+                            cout<<"hmm this delete then "<<adj[i].first<<" "<<adj[i].second<<endl;
+                            //adj.resize(i+1);
+                        }
+                    }
                     return;
                 }
                 if (maze[current_position.first + direction[0]][current_position.second + direction[1]] == 0) {
@@ -172,7 +178,7 @@ void Depth_first_search(int v,int u){
             }
         }
 
-        cout<<"Count"<<count_dir<<endl;
+        cout<<"Count "<<count_dir<<endl;
         cout<<"Before deleting in adj "<<s.peek().first<<" "<<s.peek().second<<endl;
         if (count_dir == 4) {
             cout<<"In the counter"<<endl;
@@ -182,34 +188,54 @@ void Depth_first_search(int v,int u){
                 cout<<endl<<"Before conditino check\n";
                 cout<<"adj "<<adj[i].first<<" "<<adj[i].second<<endl;
                 cout<<"s "<<s.peek().first<<" "<<s.peek().second<<endl;
-                if (adj[i].first == s.peek().second && adj[i].second == s.peek().first) {
+                if (adj[i].first == s.peek().first && adj[i].second == s.peek().second) {
                     //adj.erase(adj.begin()+i+1);
                     cout<<"hmm this delete then "<<adj[i].first<<" "<<adj[i].second<<endl;
-                    adj.resize(i-1);
+                    adj.resize(i+1);
                 }
-                //}
             }
         }
 
+        int cp=0;
+        cout<<adj.back().first<<" "<< adj.back().second<<" "<<s.peek().first<<" "<<s.peek().second<<" "<<endl;
+        for(auto &d:adj){
+
+            if(d.first==s.peek().second && d.second==s.peek().first){
+                cp++;
+            }
+        }
+        if(cp != 1){
+            cout<<"Duplicate found:";
+            for(auto &d:adj){
+                cout<<d.first<<" "<<d.second<<"\t";
+            }
+            cout<<endl;
+        }
         cout << "\nStack " << s.size() << " \tvisited " << visited.size() << endl;
 
-
-        for (auto &i : adj){
-            maze[i.first][i.second]=7;
+        //Create copy of array
+        int maze_copy[21][21];
+        for (int j = 0; j < 21; j++) {
+            for (int i = 0; i < 21; i++) {
+                maze_copy[i][j] = maze[i][j];
+            }
         }
 
-        for(int i =0; i<21;i++){
-            for(int j =0; j<21;j++){
+        for (auto &i : adj){
+            maze_copy[i.first][i.second]=7;
+        }
+
+        for (int j = 0; j < 21; j++) {
+            for (int i = 0; i < 21; i++) {
                 //cout<<path[i].first<<" "<<path[i].second<< " in "<<i<<" "<<j<<endl;
-                if(maze[i][j]==7){
+                if(maze_copy[i][j]==7){
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
                     cout<<0<<" ";
                 }
                 else{
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
-                    cout<< maze[i][j]<<" ";
+                    cout<< maze_copy[i][j]<<" ";
                 }
-
             }
             cout<<endl;
         }
@@ -234,17 +260,13 @@ int main(int argc, char const *argv[])
         count++;
     }
 
-
-
-
-
     int arr_size = sqrt(count);
     count = 0;
-    for (int i = 0; i < arr_size; i++) {
-        for (int j = 0; j < arr_size; j++) {
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
             maze[i][j] = array[count];
             if(array[count]==2){ //Set intial position
-                cout<<endl<<i<<" "<<j<<" This is i j"<<endl;
+                cout<<endl<<i<<" "<<j<<" This is Initial Position"<<endl;
                 x = i;
                 y= j;
                 initial_position = make_pair(i, j);
@@ -253,17 +275,48 @@ int main(int argc, char const *argv[])
         }
     }
 
+    //Testing codes
+    /*
+    cout<<initial_position.first<<" "<<initial_position.second<<endl;
+
+    cout<<endl;
+
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
+            cout<<i<<","<<j<<" ";
+        }
+        cout<<endl;
+    }
+
+    cout<<endl<<endl;
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
+            cout<<maze[i][j];
+        }
+        cout<<endl;
+    }
+    cout<<endl<<endl;
+
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
+            cout<<i<<","<<j<<" = "<< maze[i][j]<<endl;
+        }
+        //cout<<endl;
+    }
+
+    return 0;*/
     //cout<<current_position.first<<" "<<current_position.second<<endl;
     //cout<<maze[current_position.first][current_position.second];
 
     //Create copy of array
     int maze_copy[arr_size][arr_size];
-    for (int i = 0; i < arr_size; i++) {
-        for (int j = 0; j < arr_size; j++) {
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
             maze_copy[i][j] = maze[i][j];
         }
     }
 
+    //cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n";
     //Intialize empty stack of size 1000
     //all 0
     //push first node
@@ -274,8 +327,8 @@ int main(int argc, char const *argv[])
     //We have maze now
     //Copy of maze for print
 
-    for (int i = 0; i < arr_size; i++) {
-        for (int j = 0; j < arr_size; j++) {
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
             cout<<maze[i][j]<<" ";
         }cout<<endl;
     }
@@ -295,11 +348,10 @@ int main(int argc, char const *argv[])
     //Mark as visited
     maze[initial_position.first][initial_position.second]=1;
 
-    cout << "Is empty" << s.size() << endl;
+    cout << "Is empty " << s.size() << endl;
     cout << endl << "Hi" << endl;
 
     cout<<"Initial Position "<<initial_position.first<<" "<<initial_position.second<<endl<<endl;
-
 
     Depth_first_search(initial_position.first,initial_position.second);
 
@@ -340,8 +392,31 @@ int main(int argc, char const *argv[])
         maze_copy[i.first][i.second]=7;
     }
 
-    for(int i =0; i<arr_size;i++){
-        for(int j =0; j<arr_size;j++){
+    cout<<"duplicates"<<endl;
+    // Create a map to store the frequency of each element in vector
+
+
+    std::map<pair<int,int>, int> countMap;
+// Iterate over the vector and store the frequency of each element in map
+    for (auto & elem : adj)
+    {
+        auto result = countMap.insert(pair<pair<int,int>, int>(elem, 1));
+        if (result.second == false)
+            result.first->second++;
+    }
+
+    // Iterate over the map
+    for (auto & elem : countMap)
+    {
+        // If frequency count is greater than 1 then its a duplicate element
+        if (elem.second > 1)
+        {
+            std::cout << elem.first.first<<" "<<elem.first.second<<" " << " :: " << elem.second << std::endl;
+        }
+    }
+
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
             //cout<<path[i].first<<" "<<path[i].second<< " in "<<i<<" "<<j<<endl;
             if(maze_copy[i][j]==7){
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
@@ -356,8 +431,8 @@ int main(int argc, char const *argv[])
         cout<<endl;
     }
     cout<<endl<<endl;
-    for(int i =0; i<arr_size;i++){
-        for(int j =0; j<arr_size;j++){
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
             //cout<<path[i].first<<" "<<path[i].second<< " in "<<i<<" "<<j<<endl;
             if(maze[i][j]==0){
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
@@ -391,8 +466,8 @@ int main(int argc, char const *argv[])
 
     int arr_size = sqrt(count);
     count = 0;
-    for (int i = 0; i < arr_size; i++) {
-        for (int j = 0; j < arr_size; j++) {
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
             maze[i][j] = array[count];
             if(array[count]==2){ //Set intial position
                 cout<<endl<<i<<" "<<j<<" This is i j"<<endl;
@@ -405,8 +480,8 @@ int main(int argc, char const *argv[])
 
     //Create copy of array
     int maze_copy[arr_size][arr_size];
-    for (int i = 0; i < arr_size; i++) {
-        for (int j = 0; j < arr_size; j++) {
+    for (int j = 0; j < arr_size; j++) {
+        for (int i = 0; i < arr_size; i++) {
             maze_copy[i][j] = maze[i][j];
         }
     }
